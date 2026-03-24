@@ -8,21 +8,19 @@ def get_location_termux():
     """
 
     try:
-        result = subprocess.check_output(
-            ["termux-location", "-p", "gps", "-r", "once"],
+        # 1차: 빠른 캐시 위치
+        return subprocess.check_output(
+            ["termux-location", "-p", "network", "-r", "last"],
             text=True,
-            timeout=5
+            timeout=3
         )
-
-        data = json.loads(result)
-
-        lat = data.get("latitude")
-        lon = data.get("longitude")
-
-        if lat is None or lon is None:
-            return None, None
-
-        return lat, lon
-
     except Exception:
-        return None, None
+        try:
+            # 2차: 실제 위치 요청
+            return subprocess.check_output(
+                ["termux-location", "-p", "network"],
+                text=True,
+                timeout=5
+            )
+        except Exception:
+            return None

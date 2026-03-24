@@ -351,6 +351,7 @@ http://127.0.0.1:8000
 ```bash
 pkg update && pkg upgrade -y
 pkg install python git termux-api -y
+pkg install termux-api
 termux-setup-storage
 ```
 #### 2. 프로젝트 복사
