@@ -4,47 +4,10 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from datetime import datetime
 from app.services.battery import get_battery_status
-import psutil
 
 app = FastAPI()
 templates = Jinja2Templates(directory="web/templates")
 app.mount("/static", StaticFiles(directory="web/static"), name="static")
-
-# 상태별 포켓몬 매핑
-# - 값은 PokeAPI 포켓몬 ID
-STATE_POKEMON = {
-    "idle": {
-        "name": "pikachu",
-        "display_name": "피카츄",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-    },
-    "sleep": {
-        "name": "snorlax",
-        "display_name": "잠만보",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
-    },
-    "healing": {
-        "name": "chansey",
-        "display_name": "럭키",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png",
-    },
-    "warning": {
-        "name": "gastly",
-        "display_name": "고오스",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/92.png",
-    },
-    "focus": {
-        "name": "abra",
-        "display_name": "케이시",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/63.png",
-    },
-    "event": {
-        "name": "rotom",
-        "display_name": "로토무",
-        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/479.png",
-    },
-}
-
 
 # 상태별 포켓몬 매핑
 STATE_POKEMON = {
@@ -95,6 +58,9 @@ LAST_BATTERY_WARNING = None
 # 마지막 사용자 활동 시각 저장
 LAST_ACTIVITY_AT = datetime.now()
 
+# 마지막 activity 기록 시간 추가
+LAST_ACTIVITY_LOG_AT = None
+
 
 def add_event(event_type: str, message: str) -> None:
     """
@@ -115,33 +81,6 @@ def add_event(event_type: str, message: str) -> None:
 
     # 최근 10개까지만 유지
     del EVENT_LOGS[10:]
-
-
-def get_battery_status() -> tuple[int, bool]:
-    """
-    현재 배터리 상태 조회
-    반환:
-    - battery: 배터리 퍼센트
-    - charging: 충전 여부
-
-    배터리 정보가 없으면 기본값 반환
-    """
-
-    # psutil에서 배터리 정보 조회
-    battery_info = psutil.sensors_battery()
-
-    # 데스크탑처럼 배터리 정보가 없는 경우
-    if battery_info is None:
-        return 100, False
-
-    # 배터리 퍼센트 정수 변환
-    battery = int(battery_info.percent)
-
-    # 충전 여부 확인
-    charging = bool(battery_info.power_plugged)
-
-    # 배터리 상태 반환
-    return battery, charging
 
 
 def get_idle_minutes() -> int:
@@ -173,13 +112,13 @@ def calculate_state(battery: int, charging: bool, idle_minutes: int) -> str:
     5. 그 외 idle
     """
 
-    # 충전 중이면 회복 상태
-    if charging:
-        return "healing"
-
     # 배터리가 낮으면 경고 상태
     if battery <= 20:
         return "warning"
+    
+    # 충전 중이면 회복 상태
+    if charging:
+        return "healing"
 
     # 오래 입력이 없으면 수면 상태
     if idle_minutes >= 30:
@@ -236,11 +175,12 @@ def update_event_logs(state: str, battery: int, charging: bool, idle_minutes: in
     # 마지막 상태가 없으면 앱 시작 로그 추가
     if LAST_STATE is None:
         add_event("system", "PokeDesk 시작")
+        add_event("state", f"init → {state}")
         LAST_STATE = state
 
     # 상태가 바뀌었으면 상태 변경 로그 추가
     if LAST_STATE != state:
-        add_event("state", f"{LAST_STATE} → {state} 상태 변경")
+        add_event("state", f"{LAST_STATE} → {state}")
         LAST_STATE = state
 
     # 마지막 충전 상태가 없으면 현재 값으로 초기화
@@ -301,6 +241,15 @@ def update_activity():
     # 마지막 활동 시각 갱신
     LAST_ACTIVITY_AT = datetime.now()
 
+    # 10초에 1번만 기록
+    global LAST_ACTIVITY_LOG_AT
+
+    now = datetime.now()
+
+    if LAST_ACTIVITY_LOG_AT is None or (now - LAST_ACTIVITY_LOG_AT).seconds > 10:
+        add_event("activity", "사용자 입력 감지")
+        LAST_ACTIVITY_LOG_AT = now
+
     # 활동 로그 반환
     return JSONResponse(content={
         "ok": True,
@@ -324,7 +273,7 @@ def get_status():
     idle_minutes = get_idle_minutes()
 
     # 현재 시간 문자열 생성
-    current_time = datetime.now().strftime("%H:%M")
+    current_time = datetime.now().strftime("%H:%M:%S")
 
     # 현재 상태 계산
     state = calculate_state(
@@ -350,7 +299,7 @@ def get_status():
     )
 
     # 상태별 포켓몬 선택
-    pokemon = STATE_POKEMON[state]
+    pokemon = STATE_POKEMON.get(state, STATE_POKEMON["idle"])
 
     # 최종 응답 데이터
     data = {
