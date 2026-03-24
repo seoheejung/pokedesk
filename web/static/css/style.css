@@ -1,67 +1,302 @@
 /* 전체 배경 */
 body {
-    background-color: #1e1e1e;
-    color: #ffffff;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at top, #3a3a3a 0%, #161616 45%, #0d0d0d 100%);
     font-family: Arial, sans-serif;
+    color: #111;
+    margin: 0;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    margin: 0;
 }
 
-/* 카드 UI */
-.card {
-    background: #2a2a2a;
-    padding: 24px;
+/* 전체 도감 프레임 */
+.pokedex {
+    width: 80vw;
+    height: 80vh;
+    padding: 16px;
+    box-sizing: border-box;
+    background: linear-gradient(180deg, #df2d2d 0%, #b71818 100%);
+    border: 6px solid #7d0f0f;
+    border-radius: 28px;
+    box-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.45),
+        inset 0 3px 0 rgba(255, 255, 255, 0.18),
+        inset 0 -6px 0 rgba(0, 0, 0, 0.2);
+    padding: 18px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* 헤더 */
+.dex-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 46px;
+}
+
+.dex-lamp-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.lamp {
+    border-radius: 50%;
+    border: 2px solid rgba(0, 0, 0, 0.35);
+    box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.35);
+}
+
+.lamp-blue {
+    width: 34px;
+    height: 34px;
+    background: radial-gradient(circle at 30% 30%, #c7f4ff, #34a6ff 55%, #0b4cae);
+    box-shadow:
+        0 0 10px rgba(71, 182, 255, 0.85),
+        inset 0 2px 5px rgba(255, 255, 255, 0.35);
+}
+
+.lamp-red,
+.lamp-yellow,
+.lamp-green {
+    width: 14px;
+    height: 14px;
+}
+
+.lamp-red {
+    background: #ff5a5a;
+}
+
+.lamp-yellow {
+    background: #ffd84d;
+}
+
+.lamp-green {
+    background: #6fe27b;
+}
+
+.dex-title {
+    color: #ffe9b3;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+/* 상단 패널 */
+.top-panel {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 14px;
+    align-items: stretch;
+}
+
+/* 화면 프레임 */
+.screen-frame {
+    background: #f1f1f1;
+    border: 4px solid #991111;
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow:
+        inset 0 2px 0 rgba(255, 255, 255, 0.6),
+        inset 0 -4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.screen-inner {
+    height: 240px;
+    border-radius: 14px;
+    background:
+        linear-gradient(180deg, #d7f7d7 0%, #a9e0a9 100%);
+    border: 3px solid #4a6650;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 화면 그리드 느낌 */
+.screen-inner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 18px 18px;
+    pointer-events: none;
+}
+
+#pokemon-img {
+    width: 180px;
+    height: 180px;
+    image-rendering: pixelated;
+    z-index: 1;
+    filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.18));
+}
+
+/* 우측 박스 공통 */
+.top-right {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pokemon-name-box,
+.message-box,
+.info-box,
+.bottom-panel {
+    background: #f8f1d6;
+    border: 3px solid #7b5b13;
     border-radius: 16px;
+    box-shadow:
+        inset 0 2px 0 rgba(255,255,255,0.5),
+        inset 0 -3px 0 rgba(0,0,0,0.08);
+}
+
+.pokemon-name-box,
+.message-box {
+    padding: 12px;
+}
+
+.label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 800;
+    color: #7b5b13;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+#pokemon-name {
+    margin: 0;
+    font-size: 24px;
+    color: #2b2520;
+    line-height: 1.1;
+    word-break: keep-all;
+}
+
+#message {
+    font-size: 15px;
+    line-height: 1.45;
+    color: #1f1f1f;
+    font-weight: 700;
+    min-height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    width: 320px;
+}
+
+/* 중간 패널 */
+.middle-panel {
+    width: 100%;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.info-box {
+    padding: 10px 12px;
+    min-height: 62px;
     box-sizing: border-box;
 }
 
-/* 포켓몬 이미지 */
-img {
-    width: 140px;
-    height: 140px;
-    image-rendering: pixelated;
+.info-box div {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f1f1f;
+    line-height: 1.3;
+    word-break: keep-all;
 }
 
-/* 상태/시간/배터리 공통 여백 */
-#state,
-#message,
-#time,
-#battery,
-#charging,
-#idle-minutes {
-    margin-top: 10px;
+/* 하단 로그 */
+.bottom-panel {
+    flex: 1;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
-/* 말풍선 강조 */
-#message {
-    color: #00ffcc;
-    font-weight: bold;
+.log-header {
+    font-size: 16px;
+    font-weight: 900;
+    color: #7b5b13;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
 }
 
-/* 이벤트 로그 제목 */
-.log-title {
-    margin-top: 24px;
-    font-size: 18px;
-}
-
-/* 이벤트 로그 목록 */
 #event-log {
     list-style: none;
+    margin: 0;
     padding: 0;
-    margin: 12px 0 0 0;
-    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: hidden;
 }
 
-/* 이벤트 로그 한 줄 */
+/* 로그는 5개만 보이게 */
+#event-log li:nth-child(n+6) {
+    display: none;
+}
+
 #event-log li {
-    background: #1f1f1f;
-    border-radius: 8px;
+    background: #e7dfbf;
+    border: 2px solid #b59a52;
+    border-radius: 10px;
     padding: 8px 10px;
-    margin-top: 8px;
-    font-size: 13px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: #2b2520;
+    word-break: break-word;
+}
+
+/* 작은 세로 화면 대응 */
+@media (max-width: 480px) {
+    .pokedex {
+        width: 100vw;
+        min-height: 100vh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        padding: 14px;
+    }
+
+    .top-panel {
+        grid-template-columns: 1fr;
+    }
+
+    .screen-inner {
+        height: 220px;
+    }
+
+    #pokemon-img {
+        width: 160px;
+        height: 160px;
+    }
+
+    #pokemon-name {
+        font-size: 22px;
+    }
+
+    #message {
+        min-height: 60px;
+        font-size: 14px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
 }

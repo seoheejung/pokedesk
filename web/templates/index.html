@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokeDesk</title>
 
     <!-- CSS 연결 -->
@@ -9,43 +10,92 @@
 </head>
 <body>
 
-<div class="card">
+<div class="pokedex">
 
-    <!-- 포켓몬 이미지 -->
-    <img id="pokemon-img" src="" alt="pokemon">
+    <!-- 상단 헤더 -->
+    <div class="dex-header">
+        <div class="dex-lamp-group">
+            <div class="lamp lamp-blue"></div>
+            <div class="lamp lamp-red"></div>
+            <div class="lamp lamp-yellow"></div>
+            <div class="lamp lamp-green"></div>
+        </div>
+        <div class="dex-title">POKEDESK</div>
+    </div>
 
-    <!-- 포켓몬 이름 -->
-    <h2 id="pokemon-name"></h2>
+    <!-- 상단 상태 패널 -->
+    <div class="top-panel">
+        <div class="top-left">
+            <div class="screen-frame">
+                <div class="screen-inner">
+                    <img id="pokemon-img" src="" alt="pokemon">
+                </div>
+            </div>
+        </div>
 
-    <!-- 상태 -->
-    <div id="state"></div>
+        <div class="top-right">
+            <div class="pokemon-name-box">
+                <span class="label">이름</span>
+                <h2 id="pokemon-name"></h2>
+            </div>
 
-    <!-- 말풍선 -->
-    <div id="message"></div>
+            <div class="message-box">
+                <span class="label">메세지</span>
+                <div id="message"></div>
+            </div>
+        </div>
+    </div>
 
-    <!-- 시간 -->
-    <div id="time"></div>
+    <!-- 중간 정보 패널 -->
+    <div class="middle-panel">
+        <div class="info-grid">
+            <div class="info-box">
+                <span class="label">상태</span>
+                <div id="state"></div>
+            </div>
 
-    <!-- 배터리 / 충전 상태 -->
-    <div id="battery"></div>
-    <div id="charging"></div>
+            <div class="info-box">
+                <span class="label">시간</span>
+                <div id="time"></div>
+            </div>
 
-    <!-- 현재 위치 -->
-    <div id="location"></div>
-    <!-- 현재 날씨 -->
-    <div id="weather"></div>
+            <div class="info-box">
+                <span class="label">배터리</span>
+                <div id="battery"></div>
+            </div>
 
-    <!-- 현재 공기질 -->
-    <div id="air-quality"></div>
+            <div class="info-box">
+                <span class="label">충전</span>
+                <div id="charging"></div>
+            </div>
 
-    <!-- 유휴 시간 -->
-    <div id="idle-minutes"></div>
+            <div class="info-box">
+                <span class="label">위치</span>
+                <div id="location"></div>
+            </div>
 
-    <!-- 이벤트 로그 제목 -->
-    <h3 class="log-title">EVENT LOG</h3>
+            <div class="info-box">
+                <span class="label">날씨</span>
+                <div id="weather"></div>
+            </div>
 
-    <!-- 이벤트 로그 리스트 -->
-    <ul id="event-log"></ul>
+            <div class="info-box">
+                <span class="label">공기</span>
+                <div id="air-quality"></div>
+            </div>
+
+            <div class="info-box">
+                <span class="label">사용시간</span>
+                <div id="idle-minutes"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 하단 로그 패널 -->
+    <div class="bottom-panel">
+        <div class="log-header">EVENT LOG</div>
+        <ul id="event-log"></ul>
+    </div>
 
 </div>
 
