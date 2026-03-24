@@ -306,6 +306,47 @@ pokedesk/
 ```
 
 ---
+## 실행 방법
+
+### [1단계] Windows에서 FastAPI 서버 실행 확인
+
+#### 1. 가상환경 생성
+
+```
+python -m venv venv
+```
+
+#### 2. 가상환경 활성화
+
+```
+venv\Scripts\activate
+```
+
+#### 3. 패키지 설치
+
+```
+pip install -r requirements.txt
+```
+
+#### 4. 설치 확인
+
+```
+pip list
+```
+
+#### 5. 서버 실행
+
+```
+uvicorn app.main:app --reload
+```
+
+#### 6. 접속 확인
+
+```
+http://127.0.0.1:8000
+```
+
+---
 
 ## 실행 흐름
 

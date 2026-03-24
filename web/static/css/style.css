@@ -1,0 +1,67 @@
+/* 전체 배경 */
+body {
+    background-color: #1e1e1e;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+/* 카드 UI */
+.card {
+    background: #2a2a2a;
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    width: 320px;
+    box-sizing: border-box;
+}
+
+/* 포켓몬 이미지 */
+img {
+    width: 140px;
+    height: 140px;
+    image-rendering: pixelated;
+}
+
+/* 상태/시간/배터리 공통 여백 */
+#state,
+#message,
+#time,
+#battery,
+#charging,
+#idle-minutes {
+    margin-top: 10px;
+}
+
+/* 말풍선 강조 */
+#message {
+    color: #00ffcc;
+    font-weight: bold;
+}
+
+/* 이벤트 로그 제목 */
+.log-title {
+    margin-top: 24px;
+    font-size: 18px;
+}
+
+/* 이벤트 로그 목록 */
+#event-log {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0 0;
+    text-align: left;
+}
+
+/* 이벤트 로그 한 줄 */
+#event-log li {
+    background: #1f1f1f;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-top: 8px;
+    font-size: 13px;
+}
