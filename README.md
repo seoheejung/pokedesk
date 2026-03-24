@@ -327,6 +327,7 @@ venv\Scripts\activate
 ```
 pip install -r requirements.txt
 ```
+- requirements.txt: FastAPI, Uvicorn, Jinja2, Requests, psutil 등 실행에 필요한 패키지 목록
 
 #### 4. 설치 확인
 
@@ -345,6 +346,107 @@ uvicorn app.main:app --reload
 ```
 http://127.0.0.1:8000
 ```
+
+### [2단계] Termux 배포 및 실행
+
+#### 1. Termux 설치
+- F-Droid 또는 GitHub 릴리스 기준 Termux 설치
+- Play Store 구버전은 사용하지 않음
+
+#### 2. Termux 패키지 업데이트
+```bash
+pkg update && pkg upgrade -y
+```
+
+#### 3. Python / Git 설치
+```bash
+pkg install python git -y
+```
+#### 4. 프로젝트 가져오기
+
+방법 A. Git clone
+```
+git clone <레포지토리_URL>
+cd pokedesk
+```
+
+방법 B. PC에서 복사
+
+- 프로젝트 폴더를 샤오미 14T 내부 저장소로 복사
+- Termux에서 해당 경로로 이동
+
+```
+cd /storage/emulated/0/pokedesk
+```
+
+#### 5. 저장소 접근 권한 허용
+
+```
+termux-setup-storage
+```
+- 최초 1회 실행
+- 내부 저장소 접근 권한 승인 필요
+
+#### 6. 패키지 설치
+
+```
+pip install-r requirements.txt
+```
+
+#### 7. FastAPI 서버 실행
+
+```
+uvicorn app.main:app--host0.0.0.0--port8000
+```
+
+#### 8. 브라우저 접속
+
+```
+http://127.0.0.1:8000
+```
+
+- 같은 폰 브라우저에서 접속하면 됨
+- Chrome 또는 기본 브라우저 사용 가능
+
+#### 9. 상시 패널처럼 사용하는 방법
+
+- 브라우저에서 PokeDesk 접속
+- 전체화면 또는 홈 화면 추가 사용
+- 충전기에 연결한 상태로 책상 위 고정
+- 화면 꺼짐 시간은 Android 설정에서 별도 조정
+
+#### 10. 종료 방법
+
+Termux 실행 화면에서:
+
+```
+Ctrl+ C
+```
+
+---
+
+### [3단계] Termux 재실행 절차
+
+#### 1. Termux를 다시 열었을 때
+```
+cd ~/pokedesk
+uvicorn app.main:app--host0.0.0.0--port8000
+```
+
+#### 2. 브라우저에서 다시 접속
+```
+http://127.0.0.1:8000
+```
+
+#### Termux 배포 시 주의사항
+| 항목     | 내용                            |
+| ------ | ----------------------------- |
+| 실행 위치  | 반드시 프로젝트 루트에서 실행    |
+| 포트     | 기본 8000 사용              |
+| 종료 방식  | `Ctrl + C`                    |
+| 저장소 권한 | `termux-setup-storage` 1회 필요  |
+| 배포 구조  | PC에서 개발 후 폰으로 복사 또는 git clone |
+| 실행 방식  | Termux에서 FastAPI 실행 후 브라우저 접속 |
 
 ---
 
@@ -383,7 +485,7 @@ http://127.0.0.1:8000
 
 ## 프로젝트 상태
 
-기획 단계
+MVP 구현 진행 중
 
 ---
 
