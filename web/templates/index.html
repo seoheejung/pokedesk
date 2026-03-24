@@ -4,104 +4,88 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PokeDesk</title>
-
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <div class="pokedex">
+        <header class="dex-header">
+            <div class="dex-lamp-group">
+                <div class="lamp lamp-blue"></div>
+                <div class="lamp lamp-red"></div>
+                <div class="lamp lamp-yellow"></div>
+                <div class="lamp lamp-green"></div>
+            </div>
+            <div class="dex-title">POKEDESK</div>
+        </header>
 
-<div class="pokedex">
-
-    <div class="dex-header">
-        <div class="dex-lamp-group">
-            <div class="lamp lamp-blue"></div>
-            <div class="lamp lamp-red"></div>
-            <div class="lamp lamp-yellow"></div>
-            <div class="lamp lamp-green"></div>
-        </div>
-        <div class="dex-title">POKEDESK</div>
-    </div>
-
-    <div class="top-panel">
-        <div class="top-left">
-            <div class="screen-frame">
-                <div class="screen-inner">
-                    <img id="pokemon-img" src="" alt="pokemon">
-                    <div id="pokemon-placeholder">
-                        <div class="placeholder-box">
-                            <div class="placeholder-text">NO SIGNAL</div>
+        <main class="dex-main">
+            <section class="display-panel">
+                <div class="screen-frame">
+                    <div class="screen-inner">
+                        <img id="pokemon-img" src="" alt="pokemon">
+                        <div id="pokemon-placeholder">
+                            <div class="placeholder-box">
+                                <div class="placeholder-text">NO SIGNAL</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </section>
 
-        <div class="top-right">
-            <div class="pokemon-name-box">
-                <span class="label">이름</span>
-                <h2 id="pokemon-name"></h2>
-            </div>
+            <section class="mobile-cards">
+                <section class="card primary-card name-card">
+                    <div class="card-label">이름</div>
+                    <div id="pokemon-name" class="pokemon-name"></div>
+                </section>
 
-            <div class="message-box">
-                <span class="label">상태 메세지</span>
-                <div id="message"></div>
-                <span class="label">환경 메세지</span>
-                <div id="environment-message"></div>
-            </div>
-        </div>
+                <section class="card primary-card state-card">
+                    <div class="card-label">상태</div>
+                    <div id="state" class="state-text"></div>
+                    <div id="message" class="card-message"></div>
+                </section>
+
+                <section class="card primary-card environment-card">
+                    <div class="card-label">환경</div>
+                    <div id="weather" class="environment-line"></div>
+                    <div id="air-quality" class="environment-line"></div>
+                    <div id="environment-message" class="card-message"></div>
+                </section>
+
+                <section class="info-grid-mobile">
+                    <div class="info-card">
+                        <div class="card-label">시간</div>
+                        <div id="time" class="info-value"></div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-label">배터리</div>
+                        <div id="battery" class="info-value"></div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-label">충전</div>
+                        <div id="charging" class="info-value"></div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="card-label">사용시간</div>
+                        <div id="idle-minutes" class="info-value"></div>
+                    </div>
+                </section>
+
+                <section class="info-card location-card">
+                    <div class="card-label">위치</div>
+                    <div id="location" class="info-value"></div>
+                </section>
+            </section>
+        </main>
+
+        <section class="log-panel">
+            <div class="log-header">EVENT LOG</div>
+            <ul id="event-log"></ul>
+        </section>
     </div>
 
-    <div class="middle-panel">
-        <div class="info-grid">
-            <div class="info-box">
-                <span class="label">상태</span>
-                <div id="state"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">시간</span>
-                <div id="time"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">배터리</span>
-                <div id="battery"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">충전</span>
-                <div id="charging"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">위치</span>
-                <div id="location"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">날씨</span>
-                <div id="weather"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">공기</span>
-                <div id="air-quality"></div>
-            </div>
-
-            <div class="info-box">
-                <span class="label">사용시간</span>
-                <div id="idle-minutes"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="bottom-panel">
-        <div class="log-header">EVENT LOG</div>
-        <ul id="event-log"></ul>
-    </div>
-
-</div>
-
-<script src="/static/js/app.js"></script>
-
+    <script src="/static/js/app.js"></script>
 </body>
 </html>
