@@ -3,6 +3,17 @@ from datetime import datetime
 from app.services.battery import get_battery_status
 from app.services.weather import get_weather
 from app.services.air_quality import get_air_quality
+from app.services.location_termux import get_location_termux
+from app.services.geocoding import get_address
+
+DEFAULT_LAT = 37.5665
+DEFAULT_LON = 126.9780
+
+DEVICE_LAT, DEVICE_LON = get_location_termux()
+
+if DEVICE_LAT is None or DEVICE_LON is None:
+    DEVICE_LAT, DEVICE_LON = DEFAULT_LAT, DEFAULT_LON
+DEVICE_LOCATION = get_address(DEVICE_LAT, DEVICE_LON)
 
 app = Flask(
     __name__,
@@ -252,10 +263,10 @@ def status():
     """
 
     # 현재 날씨 조회
-    weather = get_weather()
+    weather = get_weather(DEVICE_LAT, DEVICE_LON)
 
     # 현재 공기질 조회
-    air_quality = get_air_quality()
+    air_quality = get_air_quality(DEVICE_LAT, DEVICE_LON)
 
     # 배터리 상태 조회
     battery, charging = get_battery_status()
@@ -286,7 +297,8 @@ def status():
         "pokemon": pokemon,
         "events": EVENT_LOGS,
         "weather": weather,
-        "air_quality": air_quality
+        "air_quality": air_quality,
+        "location": DEVICE_LOCATION,
     })
 
 # 서버 실행

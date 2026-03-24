@@ -1,10 +1,9 @@
 import requests
 
 
-def get_air_quality(lat=37.5665, lon=126.9780):
+def get_air_quality(lat=None, lon=None):
     """
     현재 공기질 조회
-    - 기본 좌표는 서울 시청 부근
     - Open-Meteo Air Quality API 사용
     """
 

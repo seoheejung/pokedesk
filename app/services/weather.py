@@ -24,10 +24,9 @@ WEATHER_CODE_MAP = {
 }
 
 
-def get_weather(lat=37.5665, lon=126.9780):
+def get_weather(lat=None, lon=None):
     """
     현재 날씨 조회
-    - 기본 좌표는 서울 시청 부근
     - Open-Meteo current API 사용
     """
 

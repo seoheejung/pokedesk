@@ -33,6 +33,8 @@ async function fetchStatus() {
     // 유휴 시간 표시
     document.getElementById("idle-minutes").innerText = "IDLE: " + data.idle_minutes + " min";
 
+    // 현재 위치 표시
+    document.getElementById("location").innerText = "LOCATION: " + data.location;
     // 현재 날씨 표시
     document.getElementById("weather").innerText =
         "WEATHER: " + data.weather.weather_text +
