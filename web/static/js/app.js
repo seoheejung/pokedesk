@@ -1,3 +1,6 @@
+// 마지막 활동 전송 시각 저장
+let lastActivitySentAt = 0;
+
 // 상태 데이터를 서버에서 가져오는 함수
 async function fetchStatus() {
     // API 호출
@@ -48,6 +51,39 @@ async function fetchStatus() {
         logList.appendChild(li);
     });
 }
+
+
+// 사용자 활동을 서버에 전송하는 함수
+async function sendActivity() {
+    // 현재 시각(ms)
+    const now = Date.now();
+
+    // 너무 자주 호출되지 않도록 3초 제한
+    if (now - lastActivitySentAt < 3000) {
+        return;
+    }
+
+    // 마지막 활동 전송 시각 갱신
+    lastActivitySentAt = now;
+
+    // 서버에 활동 이벤트 전송
+    await fetch("/api/activity", {
+        method: "POST"
+    });
+}
+
+
+// 클릭 이벤트 감지
+document.addEventListener("click", sendActivity);
+
+// 터치 이벤트 감지
+document.addEventListener("touchstart", sendActivity);
+
+// 키 입력 이벤트 감지
+document.addEventListener("keydown", sendActivity);
+
+// 마우스 이동 이벤트 감지
+document.addEventListener("mousemove", sendActivity);
 
 // 5초마다 상태 갱신
 setInterval(fetchStatus, 5000);

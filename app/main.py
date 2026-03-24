@@ -45,6 +45,40 @@ STATE_POKEMON = {
 }
 
 
+# 상태별 포켓몬 매핑
+STATE_POKEMON = {
+    "idle": {
+        "name": "pikachu",
+        "display_name": "피카츄",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+    },
+    "sleep": {
+        "name": "snorlax",
+        "display_name": "잠만보",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/143.png",
+    },
+    "healing": {
+        "name": "chansey",
+        "display_name": "럭키",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/113.png",
+    },
+    "warning": {
+        "name": "gastly",
+        "display_name": "고오스",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/92.png",
+    },
+    "focus": {
+        "name": "abra",
+        "display_name": "케이시",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/63.png",
+    },
+    "event": {
+        "name": "rotom",
+        "display_name": "로토무",
+        "sprite": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/479.png",
+    },
+}
+
 # 최근 이벤트 로그를 메모리에 저장
 EVENT_LOGS = []
 
@@ -56,6 +90,9 @@ LAST_CHARGING = None
 
 # 마지막 배터리 경고 상태를 저장
 LAST_BATTERY_WARNING = None
+
+# 마지막 사용자 활동 시각 저장
+LAST_ACTIVITY_AT = datetime.now()
 
 
 def add_event(event_type: str, message: str) -> None:
@@ -104,6 +141,24 @@ def get_battery_status() -> tuple[int, bool]:
 
     # 배터리 상태 반환
     return battery, charging
+
+
+def get_idle_minutes() -> int:
+    """
+    마지막 활동 시각 기준으로 유휴 시간(분) 계산
+    """
+
+    # 현재 시각
+    now = datetime.now()
+
+    # 마지막 활동 이후 지난 시간 계산
+    delta = now - LAST_ACTIVITY_AT
+
+    # 초 단위를 분으로 변환
+    idle_minutes = int(delta.total_seconds() // 60)
+
+    # 유휴 시간 반환
+    return idle_minutes
 
 
 def calculate_state(battery: int, charging: bool, idle_minutes: int) -> str:
@@ -232,20 +287,40 @@ def home(request: Request):
     )
 
 
+@app.post("/api/activity")
+def update_activity():
+    """
+    사용자 활동 시각 갱신
+    - 클릭 / 터치 / 키입력 발생 시 호출
+    """
+
+    # 전역 활동 시각 사용 선언
+    global LAST_ACTIVITY_AT
+
+    # 마지막 활동 시각 갱신
+    LAST_ACTIVITY_AT = datetime.now()
+
+    # 활동 로그 반환
+    return JSONResponse(content={
+        "ok": True,
+        "message": "activity updated"
+    })
+
+
 @app.get("/api/status")
 def get_status():
     """
     상태 API
     - 배터리/충전 상태는 실제 값 사용
-    - 유휴 시간은 아직 샘플 값 유지
+    - 유휴 시간은 마지막 활동 시각 기준 계산
     - 이벤트 로그는 메모리 기반 누적 관리
     """
 
     # 실제 배터리/충전 상태 조회
     battery, charging = get_battery_status()
 
-    # 유휴 시간은 아직 샘플 값
-    idle_minutes = 12
+    # 마지막 활동 시각 기준 유휴 시간 계산
+    idle_minutes = get_idle_minutes()
 
     # 현재 시간 문자열 생성
     current_time = datetime.now().strftime("%H:%M")
