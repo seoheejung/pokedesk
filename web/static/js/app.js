@@ -42,7 +42,7 @@ async function fetchStatus() {
         const li = document.createElement("li");
 
         // 로그 문구 입력
-        li.innerText = "[" + event.type + "] " + event.message;
+        li.innerText = "[" + event.time + "] [" + event.type + "] " + event.message;
 
         // 리스트에 추가
         logList.appendChild(li);

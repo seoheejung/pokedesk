@@ -45,6 +45,40 @@ STATE_POKEMON = {
 }
 
 
+# 최근 이벤트 로그를 메모리에 저장
+EVENT_LOGS = []
+
+# 마지막 상태를 저장
+LAST_STATE = None
+
+# 마지막 충전 상태를 저장
+LAST_CHARGING = None
+
+# 마지막 배터리 경고 상태를 저장
+LAST_BATTERY_WARNING = None
+
+
+def add_event(event_type: str, message: str) -> None:
+    """
+    이벤트 로그 추가
+    - 가장 최근 로그가 위로 오도록 앞에 삽입
+    - 최대 10개만 유지
+    """
+
+    # 현재 시각 문자열 생성
+    now = datetime.now().strftime("%H:%M:%S")
+
+    # 새 이벤트를 맨 앞에 추가
+    EVENT_LOGS.insert(0, {
+        "time": now,
+        "type": event_type,
+        "message": message,
+    })
+
+    # 최근 10개까지만 유지
+    del EVENT_LOGS[10:]
+
+
 def get_battery_status() -> tuple[int, bool]:
     """
     현재 배터리 상태 조회
@@ -52,21 +86,20 @@ def get_battery_status() -> tuple[int, bool]:
     - battery: 배터리 퍼센트
     - charging: 충전 여부
 
-    예외 처리:
-    - 데스크탑 등 배터리 정보가 없으면 기본값 반환
+    배터리 정보가 없으면 기본값 반환
     """
 
     # psutil에서 배터리 정보 조회
     battery_info = psutil.sensors_battery()
 
-    # 배터리 정보가 없으면 기본값 반환
+    # 데스크탑처럼 배터리 정보가 없는 경우
     if battery_info is None:
         return 100, False
 
     # 배터리 퍼센트 정수 변환
     battery = int(battery_info.percent)
 
-    # 충전 여부
+    # 충전 여부 확인
     charging = bool(battery_info.power_plugged)
 
     # 배터리 상태 반환
@@ -96,11 +129,11 @@ def calculate_state(battery: int, charging: bool, idle_minutes: int) -> str:
     if idle_minutes >= 30:
         return "sleep"
 
-    # 짧은 유휴는 집중 상태로 가정
+    # 일정 시간 조용하면 집중 상태
     if idle_minutes >= 10:
         return "focus"
 
-    # 나머지는 기본 대기 상태
+    # 그 외는 기본 대기 상태
     return "idle"
 
 
@@ -133,49 +166,57 @@ def build_message(state: str, battery: int, charging: bool, idle_minutes: int) -
     return "현재는 대기 상태야."
 
 
-def build_events(state: str, battery: int, charging: bool, idle_minutes: int) -> list[dict]:
+def update_event_logs(state: str, battery: int, charging: bool, idle_minutes: int) -> None:
     """
-    현재 상태 기준의 이벤트 로그 생성
-    - 지금은 샘플 로그 형태
-    - 다음 단계에서 메모리 저장 방식으로 변경
+    상태 변화에 따라 이벤트 로그 갱신
+    - 상태 변경 시 로그 추가
+    - 충전 시작/해제 시 로그 추가
+    - 배터리 부족 진입 시 로그 추가
     """
 
-    # 최근 이벤트 로그 리스트
-    events = []
+    # 전역 상태 사용 선언
+    global LAST_STATE, LAST_CHARGING, LAST_BATTERY_WARNING
 
-    # 상태 진입 로그 추가
-    events.append({
-        "type": "state",
-        "message": f"{state} 상태 진입"
-    })
+    # 마지막 상태가 없으면 앱 시작 로그 추가
+    if LAST_STATE is None:
+        add_event("system", "PokeDesk 시작")
+        LAST_STATE = state
 
-    # 충전 상태 로그 추가
-    if charging:
-        events.append({
-            "type": "power",
-            "message": "충전 중"
-        })
-    else:
-        events.append({
-            "type": "power",
-            "message": "충전 해제 상태"
-        })
+    # 상태가 바뀌었으면 상태 변경 로그 추가
+    if LAST_STATE != state:
+        add_event("state", f"{LAST_STATE} → {state} 상태 변경")
+        LAST_STATE = state
 
-    # 배터리 경고 로그 추가
-    if battery <= 20:
-        events.append({
-            "type": "battery",
-            "message": f"배터리 부족: {battery}%"
-        })
+    # 마지막 충전 상태가 없으면 현재 값으로 초기화
+    if LAST_CHARGING is None:
+        LAST_CHARGING = charging
 
-    # 유휴 시간 로그 추가
-    events.append({
-        "type": "idle",
-        "message": f"유휴 시간: {idle_minutes}분"
-    })
+    # 충전 시작 감지
+    if LAST_CHARGING is False and charging is True:
+        add_event("power", "충전 시작")
+        LAST_CHARGING = charging
 
-    # 최대 5개만 반환
-    return events[:5]
+    # 충전 해제 감지
+    elif LAST_CHARGING is True and charging is False:
+        add_event("power", "충전 해제")
+        LAST_CHARGING = charging
+
+    # 현재 배터리 부족 여부 계산
+    battery_warning = battery <= 20
+
+    # 마지막 배터리 경고 상태가 없으면 현재 값으로 초기화
+    if LAST_BATTERY_WARNING is None:
+        LAST_BATTERY_WARNING = battery_warning
+
+    # 배터리 부족 상태 진입 감지
+    if LAST_BATTERY_WARNING is False and battery_warning is True:
+        add_event("battery", f"배터리 부족 진입: {battery}%")
+        LAST_BATTERY_WARNING = battery_warning
+
+    # 배터리 부족 상태 해제 감지
+    elif LAST_BATTERY_WARNING is True and battery_warning is False:
+        add_event("battery", f"배터리 경고 해제: {battery}%")
+        LAST_BATTERY_WARNING = battery_warning
 
 
 @app.get("/")
@@ -197,26 +238,32 @@ def get_status():
     상태 API
     - 배터리/충전 상태는 실제 값 사용
     - 유휴 시간은 아직 샘플 값 유지
+    - 이벤트 로그는 메모리 기반 누적 관리
     """
 
     # 실제 배터리/충전 상태 조회
     battery, charging = get_battery_status()
 
-    # 유휴 시간은 아직 샘플 값 사용
+    # 유휴 시간은 아직 샘플 값
     idle_minutes = 12
 
     # 현재 시간 문자열 생성
     current_time = datetime.now().strftime("%H:%M")
 
-    # 상태 계산
+    # 현재 상태 계산
     state = calculate_state(
         battery=battery,
         charging=charging,
         idle_minutes=idle_minutes
     )
 
-    # 상태별 포켓몬 선택
-    pokemon = STATE_POKEMON[state]
+    # 이벤트 로그 갱신
+    update_event_logs(
+        state=state,
+        battery=battery,
+        charging=charging,
+        idle_minutes=idle_minutes
+    )
 
     # 상태별 메시지 생성
     message = build_message(
@@ -226,13 +273,8 @@ def get_status():
         idle_minutes=idle_minutes
     )
 
-    # 이벤트 로그 생성
-    events = build_events(
-        state=state,
-        battery=battery,
-        charging=charging,
-        idle_minutes=idle_minutes
-    )
+    # 상태별 포켓몬 선택
+    pokemon = STATE_POKEMON[state]
 
     # 최종 응답 데이터
     data = {
@@ -243,7 +285,7 @@ def get_status():
         "idle_minutes": idle_minutes,   # 유휴 시간
         "time": current_time,           # 현재 시간
         "pokemon": pokemon,             # 포켓몬 정보
-        "events": events                # 이벤트 로그
+        "events": EVENT_LOGS            # 누적 이벤트 로그
     }
 
     # JSON 반환
