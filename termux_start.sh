@@ -16,7 +16,10 @@ fi
 echo "[3] 가상환경 활성화"
 source venv/bin/activate
 
-echo "[4] 서버 실행"
+echo "[4] PYTHONPATH 설정"
+export PYTHONPATH="$HOME/pokedesk"
+
+echo "[5] 서버 실행"
 echo "접속: http://127.0.0.1:8000"
 echo "종료: Ctrl + C"
 
