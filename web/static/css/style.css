@@ -420,8 +420,10 @@ body {
 @media (max-width: 640px) {
     html,
     body {
-        height: 100%;
-        overflow: hidden;
+        height: auto;
+        overflow-y: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
     }
 
     body {
@@ -429,11 +431,15 @@ body {
         align-items: stretch;
     }
 
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
     .pokedex {
         width: 100vw;
-        height: 100dvh;
-        max-height: 100dvh;
-        overflow: hidden;
+        min-height: 100dvh;
+        height: auto;
+        overflow: visible;
         border-radius: 0;
         border-left: 0;
         border-right: 0;
