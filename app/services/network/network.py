@@ -29,38 +29,25 @@ def get_network_status():
     
 def get_network_detail():
     """
-    네트워크 타입 + latency + 품질 반환
+    실행 환경에 따라 네트워크 상세 정보 조회
+    반환값:
+    {
+        "type": "wifi" | "connected" | "offline" | "unknown",
+        "latency": int | None,
+        "quality": "GOOD" | "NORMAL" | "SLOW" | "OFFLINE" | "UNKNOWN"
+    }
     """
-    network_type = get_network_status()
+    try:
+        if is_termux():
+            from app.services.network.termux_impl import get_network_detail_termux
+            return get_network_detail_termux()
 
-    # 연결 자체가 끊긴 경우
-    if network_type == "offline":
+        from app.services.network.psutil_impl import get_network_detail_psutil
+        return get_network_detail_psutil()
+
+    except Exception:
         return {
-            "type": "offline",
-            "latency": None,
-            "quality": "OFFLINE"
-        }
-
-    # ping 측정
-    latency = get_latency_ms()
-
-    # 연결은 있으나 latency 측정 실패
-    if latency is None:
-        return {
-            "type": network_type,
+            "type": "unknown",
             "latency": None,
             "quality": "UNKNOWN"
         }
-
-    if latency < 50:
-        quality = "GOOD"
-    elif latency < 150:
-        quality = "NORMAL"
-    else:
-        quality = "SLOW"
-
-    return {
-        "type": network_type,
-        "latency": latency,
-        "quality": quality
-    }
