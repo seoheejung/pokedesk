@@ -14,7 +14,7 @@ echo "[3] 저장소 권한 연결"
 termux-setup-storage
 
 echo "[4] 프로젝트 경로 확인"
-PROJECT_DIR="$HOME/pokedesk"
+PROJECT_DIR="$HOME/android-monitor-console"
 
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "프로젝트 폴더가 없습니다: $PROJECT_DIR"
