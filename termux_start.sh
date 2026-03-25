@@ -4,7 +4,7 @@
 set -e
 
 echo "[1] 프로젝트 폴더 이동"
-cd "$HOME/pokedesk"
+cd "$HOME/android-monitor-console"
 
 echo "[2] 가상환경 확인"
 if [ ! -d "venv" ]; then
@@ -17,7 +17,7 @@ echo "[3] 가상환경 활성화"
 source venv/bin/activate
 
 echo "[4] PYTHONPATH 설정"
-export PYTHONPATH="$HOME/pokedesk"
+export PYTHONPATH="$HOME/android-monitor-console"
 
 echo "[5] 서버 실행"
 echo "접속: http://127.0.0.1:8000"
