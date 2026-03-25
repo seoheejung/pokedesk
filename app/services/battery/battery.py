@@ -16,11 +16,11 @@ def get_battery_status():
     try:
         # Termux 환경이면 termux-api 방식 import 후 실행
         if is_termux():
-            from app.services.battery_termux import get_battery_status_termux
+            from app.services.battery.termux_impl import get_battery_status_termux
             return get_battery_status_termux()
 
         # 로컬 환경이면 psutil 방식 import 후 실행
-        from app.services.battery_psutil import get_battery_status_psutil
+        from app.services.battery.psutil_impl import get_battery_status_psutil
         return get_battery_status_psutil()
 
     except Exception:

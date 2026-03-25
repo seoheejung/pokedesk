@@ -1,5 +1,5 @@
 import os
-from app.services.network_latency import get_latency_ms
+from app.services.network.latency import get_latency_ms
 
 def is_termux():
     """
@@ -16,11 +16,11 @@ def get_network_status():
     try:
         # Termux 환경이면 termux-api 방식 import 후 실행
         if is_termux():
-            from app.services.network_termux import get_network_status_termux
+            from app.services.network.termux_impl import get_network_status_termux
             return get_network_status_termux()
 
         # 로컬 환경이면 psutil 방식 import 후 실행
-        from app.services.network_psutil import get_network_status_psutil
+        from app.services.network.psutil_impl import get_network_status_psutil
         return get_network_status_psutil()
 
     except Exception:

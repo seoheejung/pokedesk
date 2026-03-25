@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify
 from datetime import datetime
-from app.services.battery import get_battery_status
+from app.services.battery.battery import get_battery_status
 from app.services.location_termux import get_location_termux
 from app.services.geocoding import get_address
 from threading import Thread
@@ -11,7 +11,7 @@ from app.services.environment import get_cached_env
 from app.services.state_logic import build_state_message
 from app.services.event_log import get_idle_minutes, update_event_logs
 from app.constants.state_profile import STATE_PROFILE
-from app.services.network import get_network_detail
+from app.services.network.network import get_network_detail
 
 app = Flask(
     __name__,
