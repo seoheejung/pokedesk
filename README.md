@@ -89,8 +89,10 @@ Android Monitor Console은 안드로이드 디바이스를 운영 패널로 활�
 
 ### Mobile
 
-<img src="images/mobile_1_task.png" width="250">
-<img src="images/mobile_2_task.png" width="250">
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+  <img src="images/mobile_1_task.png" width="250">
+  <img src="images/mobile_2_task.png" width="250">
+</div>
 
 ---
 
@@ -336,7 +338,6 @@ http://127.0.0.1:8000
 | /api/status      | 5초  | 상태, 배터리, 유휴   |
 | /api/environment | 30초 | 날씨, 공기질, 네트워크 |
 
-
 ---
 
 ## 실행 흐름
@@ -358,16 +359,9 @@ http://127.0.0.1:8000
 - 중복 제거
 - 운영 도구 기준 설계
 
----
-
-## 프로젝트 상태
-
-진행 중 (UI 안정화 단계)
 
 ---
 
 ## 라이선스
 
 MIT
-
----
