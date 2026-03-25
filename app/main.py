@@ -7,9 +7,9 @@ from threading import Thread
 
 import app.core.state_store as store
 from app.services.environment import get_cached_env
-from app.services.pokemon_logic import build_state_message, build_environment_message
+from app.services.state_logic import build_state_message, build_environment_message
 from app.services.event_log import add_event, get_idle_minutes, update_event_logs
-from app.constants.pokemon import STATE_POKEMON
+from app.constants.state_profile import STATE_PROFILE
 
 app = Flask(
     __name__,
@@ -108,8 +108,8 @@ def status():
     # 이벤트 로그 업데이트
     update_event_logs(state, battery, charging)
 
-    # 포켓몬 선택
-    pokemon = STATE_POKEMON.get(state, STATE_POKEMON["idle"])
+    # profile 선택
+    profile = STATE_PROFILE.get(state, STATE_PROFILE["idle"])
 
     # JSON 응답 반환
     return jsonify({
@@ -119,7 +119,7 @@ def status():
         "charging": charging,
         "idle_minutes": idle_minutes,
         "time": datetime.now().strftime("%H:%M:%S"),
-        "pokemon": pokemon,
+        "profile": profile,
         "events": store.EVENT_LOGS,
     })
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PokeDesk</title>
+    <title>Android Monitor Console</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
@@ -15,18 +15,17 @@
                 <div class="lamp lamp-yellow"></div>
                 <div class="lamp lamp-green"></div>
             </div>
-            <div class="dex-title">POKEDESK</div>
+            <div class="dex-title">Android Monitor Console</div>
         </header>
 
         <main class="dex-main">
             <section class="display-panel">
                 <div class="screen-frame">
                     <div class="screen-inner">
-                        <img id="pokemon-img" src="" alt="pokemon">
-                        <div id="pokemon-placeholder">
-                            <div class="placeholder-box">
-                                <div class="placeholder-text">NO SIGNAL</div>
-                            </div>
+                        <div class="status-visual">
+                            <div id="state-icon" class="state-icon">◦</div>
+                            <div id="state-label" class="state-label">SYSTEM IDLE</div>
+                            <div class="status-subtext">ANDROID MONITOR CONSOLE</div>
                         </div>
                     </div>
                 </div>
@@ -34,8 +33,8 @@
 
             <section class="mobile-cards">
                 <section class="card primary-card name-card">
-                    <div class="card-label">이름</div>
-                    <div id="pokemon-name" class="pokemon-name"></div>
+                    <div class="card-label">콘솔</div>
+                    <div id="console-name" class="console-name">ANDROID MONITOR CONSOLE</div>
                 </section>
 
                 <section class="card primary-card state-card">

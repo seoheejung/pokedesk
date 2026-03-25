@@ -6,26 +6,11 @@ async function fetchStatus() {
     const res = await fetch("/api/status");
     const data = await res.json();
 
-    // 포켓몬 이미지
-    const img = document.getElementById("pokemon-img");
-    const placeholder = document.getElementById("pokemon-placeholder");
-
-    if (img.src !== data.pokemon.sprite) {
-        img.onload = () => {
-            img.classList.add("ready");
-            placeholder.style.display = "none";
-        };
-
-        img.onerror = () => {
-            placeholder.querySelector(".placeholder-text").textContent = "NO DATA";
-        };
-
-        img.src = data.pokemon.sprite;
-    }
-
-    // 이름
-    document.getElementById("pokemon-name").innerText = data.pokemon.display_name;
-
+    // 콘솔
+    document.getElementById("state-icon").innerText = data.profile.icon;
+    document.getElementById("state-label").innerText = data.profile.label;
+    document.getElementById("console-name").innerText = "ANDROID MONITOR CONSOLE";
+    
     // 상태
     document.getElementById("state").innerText = data.state;
 
