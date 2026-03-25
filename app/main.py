@@ -9,8 +9,9 @@ import platform
 import app.core.state_store as store
 from app.services.environment import get_cached_env
 from app.services.state_logic import build_state_message, build_environment_message
-from app.services.event_log import add_event, get_idle_minutes, update_event_logs
+from app.services.event_log import get_idle_minutes, update_event_logs
 from app.constants.state_profile import STATE_PROFILE
+from app.services.network import get_network_detail
 
 app = Flask(
     __name__,
@@ -86,7 +87,7 @@ def update_activity():
 def status():
     """
     빠른 상태 API
-    - 배터리 / 유휴 시간 / 상태 / 포켓몬 / 이벤트만 반환
+    - 배터리 / 유휴 시간 / 상태 / 이벤트만 반환
     """
     # 배터리 상태 조회
     battery, charging = get_battery_status()
@@ -110,7 +111,6 @@ def status():
         "battery": battery,
         "charging": charging,
         "idle_minutes": idle_minutes,
-        "time": datetime.now().strftime("%H:%M:%S"),
         "profile": profile,
         "events": store.EVENT_LOGS,
         "os": f"{platform.system()} ({platform.release()})",
@@ -120,7 +120,7 @@ def status():
 def environment():
     """
     느린 환경 정보 API
-    - 날씨 / 공기질 / 위치 반환
+    - 날씨 / 공기질 / 위치 / 네트워크 반환
     """
     if store.DEVICE_LOCATION == "위치 확인 중":
         try:
@@ -131,11 +131,14 @@ def environment():
     weather, air_quality = get_cached_env()
     environment_message = build_environment_message(weather, air_quality)
 
+    network = get_network_detail()
+
     return jsonify({
         "weather": weather,
         "air_quality": air_quality,
         "location": store.DEVICE_LOCATION,
         "message": environment_message,
+        "network": network,
     })
 
 # 서버 실행

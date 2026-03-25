@@ -1,6 +1,15 @@
 // 마지막 활동 전송 시각 저장
 let lastActivitySentAt = 0;
 
+const typeMap = {
+    wifi: "Wi-Fi",
+    mobile: "Mobile",
+    ethernet: "Ethernet",
+    connected: "Connected",
+    offline: "Offline",
+    unknown: "Unknown"
+};
+
 // 상태 데이터 조회
 async function fetchStatus() {
     const res = await fetch("/api/status");
@@ -36,9 +45,6 @@ async function fetchStatus() {
         stateEl.classList.add(`state-${data.state}`);
     }
 
-    // 시간
-    document.getElementById("time").innerText = data.time;
-
     // 배터리
     document.getElementById("battery").innerText = data.battery + "%";
 
@@ -64,10 +70,23 @@ async function fetchStatus() {
     return data;
 }
 
-// 환경 데이터 조회
+// 환경 및 네트워크 데이터 조회
 async function fetchEnvironment() {
     const res = await fetch("/api/environment");
     const data = await res.json();
+
+    // 네트워크 상태
+    const net = data.network;
+
+    if (net.type === "offline") {
+        document.getElementById("network").innerText = "OFFLINE";
+    } else if (net.latency === null) {
+        document.getElementById("network").innerText =
+            `${typeMap[net.type] || net.type} · ${net.quality}`;
+    } else {
+        document.getElementById("network").innerText =
+            `${typeMap[net.type] || net.type} · ${net.quality} (${net.latency}ms)`;
+    }
 
     // 위치
     document.getElementById("location").innerText = data.location;
