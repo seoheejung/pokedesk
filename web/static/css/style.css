@@ -12,16 +12,6 @@
     --shadow: 0 14px 30px rgba(0, 0, 0, 0.45);
 }
 
-.state-warning { color: #f59e0b; }
-.state-healing { color: #4ade80; }
-.state-sleep { color: #64748b; }
-.state-focus { color: #60a5fa; }
-
-.aqi-bad {
-    color: #f97316;
-    font-weight: 700;
-}
-
 * {
     box-sizing: border-box;
 }
@@ -196,6 +186,50 @@ body {
     color: var(--text-main);
 }
 
+.state-warning { color: #f59e0b; }
+.state-healing { color: #4ade80; }
+.state-sleep { color: #64748b; }
+.state-focus { color: #60a5fa; }
+
+.state-icon.warning {
+    border-color: #f59e0b;
+    color: #f59e0b;
+}
+
+.state-icon.healing {
+    border-color: #4ade80;
+    color: #4ade80;
+}
+
+.state-icon.sleep {
+    border-color: #64748b;
+    color: #64748b;
+}
+
+.state-icon.focus {
+    border-color: #60a5fa;
+    color: #60a5fa;
+}
+
+.aqi-bad {
+    color: #f97316;
+    font-weight: 700;
+}
+
+.state-text {
+    letter-spacing: 1px;
+}
+
+.state-icon.healing {
+    border-color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+}
+
+.state-icon.warning {
+    border-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.12);
+}
+
 .card-message,
 .environment-line,
 .info-value {
@@ -334,4 +368,16 @@ body {
         font-size: 10px;
         padding: 7px 8px;
     }
+}
+
+
+/* 중앙 아이콘 미세 애니메이션 */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.state-icon.healing {
+    animation: pulse 1.8s infinite ease-in-out;
 }

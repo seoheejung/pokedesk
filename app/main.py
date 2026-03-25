@@ -75,18 +75,9 @@ def home():
 def update_activity():
     """
     사용자 입력 감지 API
-    - 클릭 / 터치 / 키입력 발생 시 호출
+    - 클릭 / 터치 / 키입력 발생 시 마지막 활동 시각만 갱신
     """
-    now = datetime.now()
-
-    # 마지막 활동 시각 갱신
-    store.LAST_ACTIVITY_AT = now
-
-    # 10초에 1번만 로그 기록
-    if store.LAST_ACTIVITY_LOG_AT is None or (now - store.LAST_ACTIVITY_LOG_AT).total_seconds() > 10:
-        add_event("activity", "사용자 입력")
-        store.LAST_ACTIVITY_LOG_AT = now
-
+    store.LAST_ACTIVITY_AT = datetime.now()
     return jsonify({"ok": True})
 
 

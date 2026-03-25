@@ -27,6 +27,3 @@ LAST_BATTERY_WARNING = None
 
 # 마지막 사용자 활동 시각
 LAST_ACTIVITY_AT = datetime.now()
-
-# 마지막 activity 로그 기록 시각 (로그 과다 방지)
-LAST_ACTIVITY_LOG_AT = None

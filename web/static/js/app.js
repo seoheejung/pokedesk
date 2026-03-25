@@ -11,8 +11,25 @@ async function fetchStatus() {
     document.getElementById("state-label").innerText = data.profile.label;
     document.getElementById("console-name").innerText = "ANDROID MONITOR CONSOLE";
 
-    // 상태
-    document.getElementById("state").innerText = data.profile.label;
+    // 상태 텍스트
+    const stateEl = document.getElementById("state");
+    stateEl.innerText = data.profile.label;
+
+    // 기존 상태 클래스 제거 후 현재 상태 클래스 적용
+    stateEl.classList.remove(
+        "state-idle",
+        "state-sleep",
+        "state-focus",
+        "state-warning",
+        "state-healing",
+        "state-event"
+    );
+    stateEl.classList.add(`state-${data.state}`);
+
+    // 상태 아이콘 클래스 적용
+    const iconEl = document.getElementById("state-icon");
+    iconEl.className = "state-icon";
+    iconEl.classList.add(data.state);
 
     // 상태 메시지
     document.getElementById("message").innerText = data.message;
@@ -39,6 +56,9 @@ async function fetchStatus() {
         logList.appendChild(li);
     });
 
+    // 로그 자동 하단 스크롤
+    logList.scrollTop = logList.scrollHeight;
+
     return data;
 }
 
@@ -62,9 +82,17 @@ async function fetchEnvironment() {
         (data.weather.temperature !== null ? " / " + data.weather.temperature + "°C" : "");
 
     // 공기질
-    document.getElementById("air-quality").innerText =
+    const airEl = document.getElementById("air-quality");
+    airEl.innerText =
         data.air_quality.air_text +
         (data.air_quality.us_aqi !== null ? " / AQI " + data.air_quality.us_aqi : "");
+
+    // AQI 강조 클래스 초기화 후 재적용
+    airEl.classList.remove("aqi-bad");
+
+    if (data.air_quality.us_aqi !== null && data.air_quality.us_aqi >= 100) {
+        airEl.classList.add("aqi-bad");
+    }
 
     return data;
 }
